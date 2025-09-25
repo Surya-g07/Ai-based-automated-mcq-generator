@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI MCQ Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #111;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00ffc8;
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #00ffc8;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #00ccb3;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>AI MCQ Generator</h2>
+
+    {% if session['role'] == 'student' %}
+        <form method="POST" action="/student">
+            <input type="text" name="session_key" placeholder="Enter Session Key" required>
+            <button type="submit">Join Quiz</button>
+        </form>
+
+    {% elif session['role'] == 'teacher' %}
+        <form method="POST" action="/teacher" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <input type="number" name="num_questions" placeholder="Number of Questions" required>
+            <select name="difficulty" required>
+                <option value="" disabled selected>Select Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <input type="number" name="timer" placeholder="Timer (minutes)">
+            <button type="submit">Generate MCQs</button>
+        </form>
+    {% else %}
+        <p>Invalid access. Please <a href="/login">log in</a>.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

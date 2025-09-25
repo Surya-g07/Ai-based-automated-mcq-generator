@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Key</title>
+    <style>
+        body { font-family: Arial; background: #121212; color: #fff; text-align: center; padding: 80px; }
+        .key-box {
+            font-size: 24px;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            color: #00ffc8;
+            display: inline-block;
+        }
+        a {
+            color: #00bfff;
+            display: block;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Session Key Generated</h1>
+    <p>Share this key with your students:</p>
+    <div class="key-box">{{ session_key }}</div>
+    <a href="/">Back to Home</a>
+</body>
+</html>

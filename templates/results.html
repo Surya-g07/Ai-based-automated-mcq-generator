@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            padding: 40px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #00ffc8;
+            margin-bottom: 30px;
+        }
+
+        .result-container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .question p {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00ffc8;
+        }
+
+        .option {
+            font-size: 16px;
+            margin: 4px 0;
+        }
+
+        .correct {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background-color: #262626;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 10px;
+            font-size: 14px;
+            border-radius: 20px;
+        }
+
+        .tag-correct {
+            background-color: #00ff88;
+            color: #000;
+        }
+
+        .tag-incorrect {
+            background-color: #ff4d4d;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Quiz Results</h2>
+
+    <div class="result-container">
+        {% for mcq in mcqs %}
+            <div class="question">
+                <p>{{ loop.index }}. {{ mcq.question }}</p>
+
+                {% for opt in mcq.options %}
+                    <div class="option">
+                        {{ opt[0] }}) {{ opt[1] }}
+                    </div>
+                {% endfor %}
+
+                <div class="highlight">
+                    Your Answer: 
+                    <span class="{{ 'correct' if mcq.user_answer == mcq.correct else 'incorrect' }}">
+                        {{ mcq.user_answer or 'Not Answered' }}
+                    </span>
+                </div>
+
+                <div class="highlight" style="margin-top: 5px;">
+                    Correct Answer: <strong class="correct">{{ mcq.correct }}</strong>
+                </div>
+
+                <span class="tag {{ 'tag-correct' if mcq.is_correct else 'tag-incorrect' }}">
+                    {{ '✔ Correct' if mcq.is_correct else '✘ Incorrect' }}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

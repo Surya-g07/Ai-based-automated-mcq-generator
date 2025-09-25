@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            padding: 30px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .quiz-container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .question p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00ffc8;
+        }
+
+        .option {
+            margin: 8px 0;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        label {
+            font-size: 16px;
+        }
+
+        button {
+            display: block;
+            margin: 30px auto 0;
+            background-color: #00ffc8;
+            color: #000;
+            font-size: 18px;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00ccb3;
+        }
+
+        #timer {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4444;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .session-key {
+            text-align: center;
+            color: #00ff99;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    {% if session_key %}
+        <div class="session-key">Session Key: {{ session_key }}</div>
+    {% endif %}
+
+    <div id="timer">Time Remaining: <span id="countdown"></span></div>
+
+    <h2 style="text-align:center;">Answer the Following Questions</h2>
+
+    <div class="quiz-container">
+        <form id="quizForm" method="POST" action="{{ url_for('submit') }}">
+            {% if session_key %}
+                <input type="hidden" name="session_key" value="{{ session_key }}">
+            {% endif %}
+
+            {% for mcq in mcqs %}
+                {% set idx = loop.index0 %}
+                <div class="question">
+                    <p>{{ loop.index }}. {{ mcq.question }}</p>
+                    {% for opt in mcq.options %}
+                        <div class="option">
+                            <input type="radio" name="{{ idx }}" value="{{ opt[0] }}" id="{{ idx }}_{{ opt[0] }}">
+                            <label for="{{ idx }}_{{ opt[0] }}">{{ opt[0] }}) {{ opt[1] }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit">Submit Answers</button>
+        </form>
+    </div>
+
+    <script>
+      let totalSeconds = parseInt("{{ timer | default(1) }}") * 60;
+      const timerDisplay = document.getElementById("countdown");
+
+      function updateTimer() {
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+          totalSeconds--;
+
+          if (totalSeconds < 0) {
+              clearInterval(countdown);
+              alert("Time's up! Submitting your answers...");
+              document.getElementById("quizForm").submit();
+          }
+      }
+
+      const countdown = setInterval(updateTimer, 1000);
+      window.onload = updateTimer;
+    </script>
+
+</body>
+</html>
